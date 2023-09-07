@@ -46,6 +46,3 @@ class Photo(models.Model):
     mount = models.ForeignKey(Mount, on_delete=models.CASCADE)
     image = models.ImageField(blank=True)
 
-class Photo2(models.Model):
-    mount = models.ForeignKey(Mount, on_delete=models.CASCADE)
-    image = models.ImageField(blank=True)
