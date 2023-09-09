@@ -5,7 +5,22 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['fam', 'name', 'otc', ]
+        fields = ['email', 'phone', 'fam', 'name', 'otc', ]
+
+    def save(self, **kwargs):
+        self.is_valid()
+        user = User.objects.filter(mail=self.validated_data.get('email'))
+        if user.exists():
+            return user.first()
+        else:
+            new_user = User.objects.create(
+                email=self.validated_data.get('email'),
+                phone=self.validated_data.get('phone'),
+                fam=self.validated_data.get('fam'),
+                name=self.validated_data.get('name'),
+                otc=self.validated_data.get('otc'),
+            )
+        return new_user
 
 
 class CoordsSerializer(serializers.HyperlinkedModelSerializer):
@@ -23,6 +38,4 @@ class MountSerializer(serializers.HyperlinkedModelSerializer):
 class PhotoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Photo
-        fields = ['image']
-
-
+        fields = ['pk', 'image']
