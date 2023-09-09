@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'report'
-    'rest_framework'
+    'report',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +133,6 @@ REST_FRAMEWORK = {
    ]
 
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

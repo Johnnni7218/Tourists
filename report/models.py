@@ -10,9 +10,16 @@ class User(models.Model):
 
 
 class Coords(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    height = models.IntegerField()
+    latitude = models.FloatField(max_length=50, verbose_name='Широта')
+    longitude = models.FloatField(max_length=50, verbose_name='Долгота')
+    height = models.IntegerField(verbose_name='Высота')
+
+    def __str__(self):
+        return f'{self.latitude},{self.longitude},{self.height}'
+
+    class Meta:
+        verbose_name = 'Координаты'
+        verbose_name_plural = 'Координаты'
 
 
 LEVEL = [
@@ -29,20 +36,58 @@ LEVEL = [
 ]
 
 
+class Level(models.Model):
+    winter = models.CharField(max_length=2, choices=LEVEL, verbose_name='Зима', null=True, blank=True,)
+    summer = models.CharField(max_length=2, choices=LEVEL, verbose_name='Лето', null=True, blank=True,)
+    autumn = models.CharField(max_length=2, choices=LEVEL, verbose_name='Осень', null=True, blank=True, )
+    spring = models.CharField(max_length=2, choices=LEVEL, verbose_name='Весна', null=True, blank=True, )
+
+    def __str__(self):
+        return f'{self.winter} {self.summer} {self.autumn} {self.spring}'
+
+    class Meta:
+        verbose_name = 'Уровень сложности перевала'
+        verbose_name_plural = 'Уровни сложности перевала'
+
+
 class Mount(models.Model):
-    winter = models.CharField(max_length=2, choices=LEVEL)
-    summer = models.CharField(max_length=2, choices=LEVEL)
-    autumn = models.CharField(max_length=2, choices=LEVEL)
-    spring = models.CharField(max_length=2, choices=LEVEL)
-    beautyTitle = models.CharField(max_length=255)
-    title = models.CharField(max_length=255)
-    other_titles = models.CharField(max_length=255)
-    connect = models.TextField()
+    new = 'new'
+    pending = 'pending'
+    accepted = 'accepted'
+    rejected = 'rejected'
+    STATUS = [
+        (new, 'новая информация'),
+        (pending, 'модератор взял в работу'),
+        (accepted, 'модерация прошла успешно'),
+        (rejected, 'модерация прошла, информация не принята'),
+    ]
+
+    beauty_title = models.CharField(max_length=255, verbose_name='Общее название', default=None)
+    title = models.CharField(max_length=255, verbose_name='Название горы', null=True, blank=True)
+    other_titles = models.CharField(max_length=255, verbose_name='Альтернативное название горы')
+    connect = models.TextField(null=True, blank=True)
     add_time = models.DateTimeField(auto_now_add=True)
     coords = models.OneToOneField(Coords, on_delete=models.CASCADE)
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, null=True, blank=True)
+    status = models.CharField(max_length=10, choices=STATUS, default=new)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return f'{self.pk} {self.beauty_title}'
+
+    class Meta:
+        verbose_name = 'Перевал'
+        verbose_name_plural = 'Перевалы'
 
 
 class Photo(models.Model):
     mount = models.ForeignKey(Mount, on_delete=models.CASCADE)
-    image = models.ImageField(blank=True)
+    data = models.ImageField(upload_to='images/%Y-%m-%d/', verbose_name='Изображение', null=True)
+    title = models.CharField(max_length=255, verbose_name='Название')
 
+    def __str__(self):
+        return f'{self.pk} {self.title}'
+
+    class Meta:
+        verbose_name = 'Изображения'
+        verbose_name_plural = 'Изображения'

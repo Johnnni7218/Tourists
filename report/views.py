@@ -6,22 +6,22 @@ from .serializers import *
 from .models import *
 
 
-class UserViewset(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class CoordsViewset(viewsets.ModelViewSet):
+class CoordsViewSet(viewsets.ModelViewSet):
     queryset = Coords.objects.all()
     serializer_class = CoordsSerializer
 
 
-class MountViewset(viewsets.ModelViewSet):
+class MountViewSet(viewsets.ModelViewSet):
     queryset = Mount.objects.all()
     serializer_class = MountSerializer
 
 
-class PhotoViewset(viewsets.ModelViewSet):
+class PhotoViewSet(viewsets.ModelViewSet):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
 
